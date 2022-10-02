@@ -13,13 +13,11 @@ namespace URL_Shortener.Controllers
 {
     public class UsersController : Controller
     {
-        private readonly URL_Shortener_Context _context;
         private readonly IUsersCntrollerService _usersControllerService;
 
-        public UsersController(IUsersCntrollerService usersCntrollerService, URL_Shortener_Context context)
+        public UsersController(IUsersCntrollerService usersCntrollerService)
         {
             _usersControllerService = usersCntrollerService;
-            _context = context;
         }
 
         // GET: Users 
