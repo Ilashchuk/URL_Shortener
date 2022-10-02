@@ -19,6 +19,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 
 builder.Services.AddScoped<IUsersCntrollerService, UsersCntrollerService>();
 builder.Services.AddScoped<IUrlsControllerService, UrlsControllerService>();
+builder.Services.AddScoped<IShortenerAlgorithmService, ShortenerAlgorithmService>();
 
 var app = builder.Build();
 
