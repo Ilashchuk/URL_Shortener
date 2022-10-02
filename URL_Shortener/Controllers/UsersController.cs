@@ -22,28 +22,23 @@ namespace URL_Shortener.Controllers
         // GET: Users
         public async Task<IActionResult> Index()
         {
-            var uRL_Shortener_Context = _context.Users.Include(u => u.Role);
-            return View(await uRL_Shortener_Context.ToListAsync());
-        }
-
-        // GET: Users/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null || _context.Users == null)
+            User user;
+            //id = _context.Users.FirstOrDefault(u => u.Email == HttpContext.User.Identity.Name).Id;
+            try
             {
-                return NotFound();
-            }
-
-            var user = await _context.Users
+                user = await _context.Users
                 .Include(u => u.Role)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (user == null)
-            {
-                return NotFound();
+                .FirstOrDefaultAsync(m => m.Id == _context.Users.FirstOrDefault(u => u.Email == HttpContext.User.Identity.Name).Id);
             }
-
-            return View(user);
+            catch (Exception ex)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            if(user != null)
+                return View(user);
+            return RedirectToAction("Login", "Account");
         }
+
         // GET: Users/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
