@@ -57,19 +57,26 @@ namespace URL_Shortener.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Link,ShortLink")] Url url)
+        public async Task<IActionResult> Create([Bind("Id,Link")] Url url)
         {
             if (ModelState.IsValid)
             {
                 url.Date = DateTime.Now;
                 User user = _context.Users.FirstOrDefault(u => u.Email == HttpContext.User.Identity.Name);
                 url.UserId = user.Id;
+
                 _context.Add(url);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                ///////////
+                url.ShortLink = IdToShortURL(url.Id);
+                //////////
+                _context.Update(url);
+                await _context.SaveChangesAsync();
+                //return RedirectToAction(nameof(Index));
+                return RedirectToAction("Details", new { id = url.Id });
             }
             ViewData["UserId"] = new SelectList(_context.Users, "Id", "Email", url.UserId);
-            return View(url);
+            return RedirectToAction("Details", new { id = url.Id });
         }
 
         // GET: Urls/Edit/5
@@ -166,6 +173,67 @@ namespace URL_Shortener.Controllers
         private bool UrlExists(int id)
         {
           return _context.Urls.Any(e => e.Id == id);
+        }
+
+        public async Task<IActionResult> ReverceToLongLink(int id)
+        {
+            Url url = await _context.Urls.FirstOrDefaultAsync(u => u.Id == id);
+            return Redirect(url.Link);
+        }
+
+        static String IdToShortURL(int n)
+        {
+            // Map to store 62 possible characters
+            char[] map = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789".ToCharArray();
+
+            String shorturl = "";
+
+            // Convert given integer id to a base 62 number
+            while (n > 0)
+            {
+                // use above map to store actual character
+                // in short url
+                shorturl += (map[n % 62]);
+                n = n / 62;
+            }
+
+            // Reverse shortURL to complete base conversion
+            return Reverse(shorturl);
+
+        }
+
+        static String Reverse(String input)
+        {
+            char[] a = input.ToCharArray();
+            int l, r = a.Length - 1;
+            for (l = 0; l < r; l++, r--)
+            {
+                char temp = a[l];
+                a[l] = a[r];
+                a[r] = temp;
+            }
+            return String.Join("", a);
+        }
+
+        // Function to get integer ID back from a short url
+        static int shortURLtoID(String shortURL)
+        {
+            int id = 0; // initialize result
+
+            // A simple base conversion logic
+            for (int i = 0; i < shortURL.Length; i++)
+            {
+                if ('a' <= shortURL[i] &&
+                           shortURL[i] <= 'z')
+                    id = id * 62 + shortURL[i] - 'a';
+                if ('A' <= shortURL[i] &&
+                           shortURL[i] <= 'Z')
+                    id = id * 62 + shortURL[i] - 'A' + 26;
+                if ('0' <= shortURL[i] &&
+                           shortURL[i] <= '9')
+                    id = id * 62 + shortURL[i] - '0' + 52;
+            }
+            return id;
         }
     }
 }

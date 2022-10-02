@@ -20,7 +20,7 @@
             @Html.DisplayNameFor(model => model.ShortLink)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ShortLink)
+            <a asp-action="ReverceToLongLink" asp-route-id="@Model?.Id">@Html.DisplayFor(model => model.ShortLink)</a>
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Date)

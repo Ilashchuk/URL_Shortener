@@ -1,13 +1,13 @@
 ﻿@model IEnumerable<URL_Shortener.Models.Url>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Hsort URLs";
 }
 
-<h1>Index</h1>
+<h1>Hsort URLs</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create">Generate New</a>
 </p>
 <table class="table">
     <thead>
@@ -34,7 +34,7 @@
                 @Html.DisplayFor(modelItem => item.Link)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.ShortLink)
+                <a asp-action="ReverceToLongLink" asp-route-id="@item.Id">@Html.DisplayFor(modelItem => item.ShortLink)</a>
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Date)
