@@ -18,6 +18,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     });
 
 builder.Services.AddScoped<IUsersCntrollerService, UsersCntrollerService>();
+builder.Services.AddScoped<IUrlsControllerService, UrlsControllerService>();
 
 var app = builder.Build();
 
