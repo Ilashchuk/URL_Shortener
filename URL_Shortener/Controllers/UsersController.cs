@@ -44,31 +44,6 @@ namespace URL_Shortener.Controllers
 
             return View(user);
         }
-
-        // GET: Users/Create
-        public IActionResult Create()
-        {
-            ViewData["RoleId"] = new SelectList(_context.Roles, "Id", "Id");
-            return View();
-        }
-
-        // POST: Users/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,FullName,Email,Password,RoleId")] User user)
-        {
-            if (ModelState.IsValid)
-            {
-                _context.Add(user);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["RoleId"] = new SelectList(_context.Roles, "Id", "Id", user.RoleId);
-            return View(user);
-        }
-
         // GET: Users/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
@@ -82,7 +57,7 @@ namespace URL_Shortener.Controllers
             {
                 return NotFound();
             }
-            ViewData["RoleId"] = new SelectList(_context.Roles, "Id", "Id", user.RoleId);
+            //ViewData["RoleId"] = new SelectList(_context.Roles, "Id", "Name");
             return View(user);
         }
 
@@ -97,7 +72,15 @@ namespace URL_Shortener.Controllers
             {
                 return NotFound();
             }
+            Role userRole = await _context.Roles.FirstOrDefaultAsync(r => r.Id == _context.Users.FirstOrDefault(
+                u => u.Email == HttpContext.User.Identity.Name).RoleId);
 
+            if (userRole != null)
+            {
+                user.Role = userRole;
+                user.RoleId = userRole.Id;
+            }
+            //user.Role = await _context.Roles.FirstOrDefaultAsync(x => x.Id == user.RoleId);
             if (ModelState.IsValid)
             {
                 try
@@ -118,7 +101,7 @@ namespace URL_Shortener.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["RoleId"] = new SelectList(_context.Roles, "Id", "Id", user.RoleId);
+            //ViewData["RoleId"] = new SelectList(_context.Roles, "Id", "Name");
             return View(user);
         }
 
