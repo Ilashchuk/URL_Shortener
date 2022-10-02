@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using URL_Shortener.Data;
+using URL_Shortener.Services.AboutViewService;
 using URL_Shortener.Services.AccountServices;
 using URL_Shortener.Services.AlgorithmServices;
 using URL_Shortener.Services.URLsServices;
@@ -24,6 +25,7 @@ builder.Services.AddScoped<IUsersCntrollerService, UsersCntrollerService>();
 builder.Services.AddScoped<IUrlsControllerService, UrlsControllerService>();
 builder.Services.AddScoped<IShortenerAlgorithmService, ShortenerAlgorithmService>();
 builder.Services.AddScoped<IAccountControllerService, UsersCntrollerService>();
+builder.Services.AddScoped<IAboutControllerServise, AboutControllerServise>();
 
 //IAccountControllerService
 
