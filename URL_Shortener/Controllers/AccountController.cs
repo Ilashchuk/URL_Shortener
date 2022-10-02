@@ -6,16 +6,21 @@ using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 using URL_Shortener.Data;
 using URL_Shortener.Models;
+using URL_Shortener.Services.AccountServices;
+using URL_Shortener.Services.UsersServices;
 using URL_Shortener.ViewModels;
 
 namespace URL_Shortener.Controllers
 {
     public class AccountController : Controller
     {
-        private URL_Shortener_Context db;
-        public AccountController(URL_Shortener_Context context)
+        private readonly IUsersCntrollerService _usersCntrollerService;
+        private readonly IAccountControllerService _accountControllerService;
+        public AccountController(IUsersCntrollerService usersCntrollerService, 
+            IAccountControllerService accountControllerService)
         {
-            db = context;
+            _usersCntrollerService = usersCntrollerService;
+            _accountControllerService = accountControllerService;
         }
         [HttpGet]
         public IActionResult Login()
@@ -28,8 +33,7 @@ namespace URL_Shortener.Controllers
         {
             if (ModelState.IsValid)
             {
-                User? user = await db.Users.Include(u => u.Role)
-                    .FirstOrDefaultAsync(u => u.Email == model.Email && u.Password == model.Password);
+                User? user = await _accountControllerService.GetUserByEmailAndPasswordAsync(model.Email, model.Password);
                 if (user != null)
                 {
                     await Authenticate(user);
@@ -48,20 +52,19 @@ namespace URL_Shortener.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(RegisterViewModel model)
         {
-            User? user = await db.Users.FirstOrDefaultAsync(u => u.Email == model.Email);
+            User? user = await _usersCntrollerService.GetUserByEmailAsync(model.Email);
             if (user == null)
             {
                 user = new User { FullName = model.FullName, 
                     Email = model.Email, 
                     Password = model.Password
                 };
-                Role userRole = await db.Roles.FirstOrDefaultAsync(r => r.Name == "user");
+                Role? userRole = await _accountControllerService.GetUserRoleWithUserValueAsync();
 
                 if (userRole != null) 
                     user.Role = userRole;
 
-                db.Add(user);
-                await db.SaveChangesAsync();
+                await _accountControllerService.AddNewUserAsync(user);
 
                 await Authenticate(user);
 

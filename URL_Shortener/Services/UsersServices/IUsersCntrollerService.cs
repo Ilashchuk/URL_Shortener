@@ -1,6 +1,6 @@
 ﻿using URL_Shortener.Models;
 
-namespace URL_Shortener.Services
+namespace URL_Shortener.Services.UsersServices
 {
     public interface IUsersCntrollerService
     {

@@ -1,7 +1,7 @@
 ﻿
 using URL_Shortener.Models;
 
-namespace URL_Shortener.Services
+namespace URL_Shortener.Services.URLsServices
 {
     public interface IUrlsControllerService
     {

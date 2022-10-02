@@ -2,7 +2,7 @@
 using URL_Shortener.Data;
 using URL_Shortener.Models;
 
-namespace URL_Shortener.Services
+namespace URL_Shortener.Services.URLsServices
 {
     public class UrlsControllerService : IUrlsControllerService
     {

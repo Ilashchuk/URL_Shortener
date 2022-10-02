@@ -8,6 +8,9 @@ using Microsoft.EntityFrameworkCore;
 using URL_Shortener.Data;
 using URL_Shortener.Models;
 using URL_Shortener.Services;
+using URL_Shortener.Services.AlgorithmServices;
+using URL_Shortener.Services.URLsServices;
+using URL_Shortener.Services.UsersServices;
 
 namespace URL_Shortener.Controllers
 {
@@ -70,13 +73,15 @@ namespace URL_Shortener.Controllers
 
                 await _urlsControllerService.AddNewUrlAsync(url);
                 ///////////
-                url.ShortLink = _shutenerAlgorithmService.IdToShortURL(url.Id);
+                url.ShortLink = _shortenerAlgorithmService.IdToShortURL(url.Id);
                 //////////
                 await _urlsControllerService.UpdateUrlAsync(url);
 
                 return RedirectToAction("Details", new { id = url.Id });
             }
-            return Problem("Models data is Invalid or URL is olready exist.");
+            else
+                ModelState.AddModelError("", "Models data is Invalid or URL is olready exist.");
+            return View();
         }
 
         
