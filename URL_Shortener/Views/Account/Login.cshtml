@@ -1,0 +1,31 @@
+﻿@model URL_Shortener.ViewModels.LoginViewModel
+
+@{
+    ViewData["Title"] = "Login";
+}
+
+<h2>Login</h2>
+
+<a asp-action="Register" asp-controller="Account">Registered</a>
+
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Login" asp-controller="Account" asp-antiforgery="true">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Email" class="control-label">Enter Email</label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Password" class="control-label">Enter Password</label>
+                <input asp-for="Password" class="form-control" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+            <dir></dir>
+            <div class="form-group">
+                <input type="submit" value="Login" class="btn btn-outline-dark" />
+            </div>
+        </form>
+    </div>
+</div>

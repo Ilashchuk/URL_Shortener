@@ -57,10 +57,13 @@ namespace URL_Shortener.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Link,ShortLink,UserId,Date")] Url url)
+        public async Task<IActionResult> Create([Bind("Id,Link,ShortLink")] Url url)
         {
             if (ModelState.IsValid)
             {
+                url.Date = DateTime.Now;
+                User user = _context.Users.FirstOrDefault(u => u.Email == HttpContext.User.Identity.Name);
+                url.UserId = user.Id;
                 _context.Add(url);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
