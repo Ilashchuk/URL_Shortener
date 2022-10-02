@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using URL_Shortener.Data;
+using URL_Shortener.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +16,8 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     {
         options.LoginPath = new PathString("/Account/Login");
     });
+
+builder.Services.AddScoped<IUsersCntrollerService, UsersCntrollerService>();
 
 var app = builder.Build();
 
