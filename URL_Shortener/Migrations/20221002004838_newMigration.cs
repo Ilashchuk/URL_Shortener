@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace URL_Shortener.Migrations
 {
-    public partial class MyMigration : Migration
+    public partial class newMigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
