@@ -1,5 +1,11 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using URL_Shortener.Data;
+using URL_Shortener.Services.AboutViewService;
+using URL_Shortener.Services.AccountServices;
+using URL_Shortener.Services.AlgorithmServices;
+using URL_Shortener.Services.URLsServices;
+using URL_Shortener.Services.UsersServices;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,6 +14,20 @@ builder.Services.AddControllersWithViews();
 
 builder.Services.AddDbContext<URL_Shortener_Context>(options =>
 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.LoginPath = new PathString("/Account/Login");
+    });
+
+builder.Services.AddScoped<IUsersCntrollerService, UsersCntrollerService>();
+builder.Services.AddScoped<IUrlsControllerService, UrlsControllerService>();
+builder.Services.AddScoped<IShortenerAlgorithmService, ShortenerAlgorithmService>();
+builder.Services.AddScoped<IAccountControllerService, UsersCntrollerService>();
+builder.Services.AddScoped<IAboutControllerServise, AboutControllerServise>();
+
+//IAccountControllerService
 
 var app = builder.Build();
 
@@ -24,6 +44,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(

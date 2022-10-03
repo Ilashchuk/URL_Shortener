@@ -1,0 +1,20 @@
+﻿public string IdToShortURL(int n)
+        {
+            // Map to store 62 possible characters
+            char[] map = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789".ToCharArray();
+
+            String shorturl = "";
+
+            // Convert given integer id to a base 62 number
+            while (n > 0)
+            {
+                // use above map to store actual character
+                // in short url
+                shorturl += (map[n % 62]);
+                n = n / 62;
+            }
+
+            // Reverse shortURL to complete base conversion
+            return Reverse(shorturl);
+
+        }
