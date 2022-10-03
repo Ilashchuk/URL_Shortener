@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Text;
 using URL_Shortener.Services.AboutViewService;
@@ -21,6 +22,7 @@ namespace URL_Shortener.Controllers
         }
 
         // GET: AboutController/Edit/5
+        [Authorize(Roles = "admin")]
         public async Task<ActionResult> Edit()
         {
             string text = await _aboutControllerService.GetTextAsync();
@@ -35,6 +37,7 @@ namespace URL_Shortener.Controllers
         // POST: AboutController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "HR")]
         public async Task<ActionResult> Edit(string text)
         {
 
