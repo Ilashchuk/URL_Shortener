@@ -8,8 +8,10 @@
 <div>
     <p>@ViewBag.Text</p>
 </div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a>
-</div>
-
+ @if (User.IsInRole("admin"))
+    {
+    <div>
+        <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a>
+    </div>
+    }
 

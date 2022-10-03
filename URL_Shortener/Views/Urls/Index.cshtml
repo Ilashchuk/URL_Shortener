@@ -5,10 +5,12 @@
 }
 
 <h1>Short URLs</h1>
-
-<p>
+@if (User.Identity.IsAuthenticated)
+{    <p>
     <a asp-action="Create">Generate New</a>
-</p>
+    </p>
+}
+
 <table class="table">
     <thead>
         <tr>
@@ -43,8 +45,11 @@
                 @Html.DisplayFor(modelItem => item.User.Email)
             </td>
             <td>
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> 
+                @if(User.IsInRole("admin") || User.Identity.Name == item.User.Email)
+                    {
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                    }
             </td>
         </tr>
 }

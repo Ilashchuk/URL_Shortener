@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -44,6 +45,7 @@ namespace URL_Shortener.Controllers
             }
 
             var url = await _urlsControllerService.GetUrlByIdAsync(id);
+
             if (url == null)
             {
                 return NotFound();
@@ -52,6 +54,7 @@ namespace URL_Shortener.Controllers
         }
 
         // GET: Urls/Create
+        [Authorize]
         public IActionResult Create()
         {
             return View();
@@ -62,6 +65,7 @@ namespace URL_Shortener.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<IActionResult> Create([Bind("Id,Link")] Url url)
         {
             if (ModelState.IsValid && _urlsControllerService.IsUniq(url))
@@ -113,11 +117,13 @@ namespace URL_Shortener.Controllers
                 return Problem("Entity set 'URL_Shortener_Context.Urls'  is null.");
             }
             var url = await _urlsControllerService.GetUrlByIdAsync(id);
-            if (url != null)
+            var user = await _usersCntrollerService.GetUserByEmailAsync(HttpContext.User.Identity.Name);
+            if (url != null && user != null && url.UserId == user.Id)
             {
                 await _urlsControllerService.DeleteUserAsync(url);
+                return RedirectToAction(nameof(Index));
             }
-            return RedirectToAction(nameof(Index));
+            return Problem("You can delete only your Urls!!!");
         }
 
         public async Task<IActionResult> ReverceToLongLink(int id)
